@@ -2,16 +2,14 @@
   <img src="http://qiniu.tomxin.cn/jdzf.png" alt="" width=200>
 </p>
 <p align="center">
-  <a href="https://travis-ci.org/tomxin7/jiandan_house.svg?branch=master">
-    <img src="https://travis-ci.org/tomxin7/jiandan_house.svg?branch=master" alt="">
+  <a href="http://house.jiandan.live/">
+    <img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="">
   </a>
-  <a href="https://github.com/LeachZhou/blog/releases">
-    <img src="https://img.shields.io/github/release/LeachZhou/blog.svg" alt="">
-  </a>
-  <a href="https://github.com/LeachZhou/blog/blob/master/LICENSE">
-     <img src="https://img.shields.io/github/license/LeachZhou/blog.svg" alt="">
+  <a href="http://tomxin.cn">
+     <img src="https://img.shields.io/badge/author-tomxin7-orange.svg" alt="">
   </a>
 </p>
+
 
 # :black_nib: 简单找房
 
