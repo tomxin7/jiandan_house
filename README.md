@@ -19,7 +19,7 @@
 
 - [http://house.jiandan.live](http://house.jiandan.live)
 
-## 运行原理
+## 运行原理（开局一张图，其他全靠编）
 
 ![mark](http://qiniu.tomxin.cn/blog/20181203/EnTpbSO2nurr.png?imageslim)
 
@@ -28,6 +28,11 @@
 - 前端：Amaze UI
 - 后端：Java8、SpringBoot、SpringData
 - 爬虫：Python 3.6
+
+## 项目地址
+- 前端源码：https://github.com/tomxin7/jiandan_house_web
+- 爬虫源码：https://github.com/tomxin7/jiandan_house_py
+
 
 ## 核心功能点
 
