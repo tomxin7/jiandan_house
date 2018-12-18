@@ -1,5 +1,6 @@
 package cn.tomxin.jiandan_house.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,6 +20,7 @@ public class Record {
     private String id;
 
     @Column(columnDefinition = "varchar(50) COMMENT '用户openId'")
+    @JsonIgnore
     private String openId;
 
     @Column(columnDefinition = "varchar(10) COMMENT '城市名称'")

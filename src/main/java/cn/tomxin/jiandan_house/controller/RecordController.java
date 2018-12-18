@@ -35,6 +35,8 @@ public class RecordController {
         String openId = JwtToken.getUserOpenId(request);
         record.setOpenId(openId);
 
+        //把中文逗号替换为英文
+        record.setKeyWord(record.getKeyWord().replace("，",","));
         return recordService.save(record);
     }
 

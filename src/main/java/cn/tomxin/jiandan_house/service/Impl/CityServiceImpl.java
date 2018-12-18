@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CityServiceImpl implements CityService{
@@ -21,7 +20,7 @@ public class CityServiceImpl implements CityService{
      */
     @Override
     public List<City> list() {
-        return cityRepository.findAll();
+        return cityRepository.findByOrderByIdAsc();
     }
 
     /**
