@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 用户信息
@@ -39,6 +40,10 @@ public class User {
     @Column(columnDefinition = "varchar(10) COMMENT '年龄'")
     @JsonIgnore
     private String year;
+
+    @Column(columnDefinition = "TIMESTAMP COMMENT '注册时间'")
+    @JsonIgnore
+    private Date registerTime;
 
     @Transient
     private String token;

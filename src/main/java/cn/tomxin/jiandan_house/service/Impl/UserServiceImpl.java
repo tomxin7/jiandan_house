@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * @author tomxin
  */
@@ -55,6 +57,7 @@ public class UserServiceImpl implements UserService {
         String userInfo = HttpClientHelper.get(url);
         User user = JSONObject.parseObject(userInfo, User.class);
         user.setOpenId(qqInfo.getOpenId());
+        user.setRegisterTime(new Date());
         return user;
     }
 }
