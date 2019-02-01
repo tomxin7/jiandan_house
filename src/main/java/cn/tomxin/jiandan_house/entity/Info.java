@@ -24,6 +24,9 @@ public class Info {
     @Column(columnDefinition = "varchar(100) COMMENT '用户名'")
     private String userName;
 
+    @Column(columnDefinition = "varchar(100) COMMENT '任务'")
+    private String task;
+
     @Column(columnDefinition = "varchar(50) COMMENT '添加时间'")
     private String createTime;
 
