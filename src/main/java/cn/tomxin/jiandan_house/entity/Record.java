@@ -27,7 +27,7 @@ public class Record {
     private String cityName;
 
     @Column(columnDefinition = "TIMESTAMP COMMENT '添加时间'")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Column(columnDefinition = "varchar(100) COMMENT '关键字'")
     private String keyWord;

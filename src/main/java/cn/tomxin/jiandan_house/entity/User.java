@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -43,7 +44,7 @@ public class User {
 
     @Column(columnDefinition = "TIMESTAMP COMMENT '注册时间'")
     @JsonIgnore
-    private Date registerTime;
+    private LocalDateTime registerTime;
 
     @Transient
     private String token;

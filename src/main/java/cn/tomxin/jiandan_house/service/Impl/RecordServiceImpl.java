@@ -5,14 +5,17 @@ import cn.tomxin.jiandan_house.entity.Record;
 import cn.tomxin.jiandan_house.repository.RecordRepository;
 import cn.tomxin.jiandan_house.service.RecordService;
 import cn.tomxin.jiandan_house.util.BeanUtil;
+import cn.tomxin.jiandan_house.util.HttpClientHelper;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -20,7 +23,17 @@ public class RecordServiceImpl implements RecordService {
     @Autowired
     private RecordRepository recordRepository;
 
+    @Value("${mail.delevop_id}")
+    private String delevopId;
 
+    @Value("${mail.account}")
+    private String account;
+
+    @Value("${mail.password}")
+    private String password;
+
+    @Value("${mail.templet_code}")
+    private String templetCode;
     /**
      * 通过openId查询记录列表
      *
@@ -40,9 +53,10 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public Record save(Record record) {
         record.setStatus(1);
-        record.setCreateTime(new Date());
+        record.setCreateTime(LocalDateTime.now());
         return recordRepository.save(record);
     }
+
 
 
     @Override
@@ -61,6 +75,71 @@ public class RecordServiceImpl implements RecordService {
 
         return recordRepository.save(record);
     }
+
+    /**
+     * 保存并发送消息
+     * @param record
+     * @return
+     */
+    @Override
+    public Record saveAndSendMessage(Record record) {
+        //插入数据
+        record = this.save(record);
+
+        if ("微信".equals(record.getRemindType())){
+            sendWXMessage(record);
+        }
+        if ("邮箱".equals(record.getRemindType())){
+            sendMailMessage(record);
+        }
+
+        return record;
+    }
+
+    /**
+     * 发送微信
+     * @param record
+     */
+    private void sendWXMessage(Record record){
+        String message = "您的任务["+ record.getCityName() + "-" + record.getKeyWord() + "]已经成功启动，系统监控到合适房源后会给您发送提醒，任务结束前请不要取关本服务号，祝您生活愉快";
+        String url = "http://wxmsg.dingliqc.com/send?msg={msg}&userIds={userid}";
+        url = url.replace("{msg}",message);
+        url = url.replace("{userid}",record.getRemind());
+
+        HttpClientHelper.get(url);
+
+    }
+
+
+    /**
+     * 发送邮件
+     * @param record
+     */
+    private void sendMailMessage(Record record){
+        String url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMailByTemplet";
+        JSONObject mailTemplate = new JSONObject();
+        mailTemplate.put("templet_code", templetCode);
+        mailTemplate.put("receiver", record.getRemind());
+        mailTemplate.put("mail_subject", "简单服务开启成功");
+        mailTemplate.put("delevop_id", delevopId);
+
+        JSONObject templetData = new JSONObject();
+        templetData.put("task", "[" + record.getCityName() + "-" + record.getKeyWord() + "]") ;
+        templetData.put("url", "http://house.jiandan.live/info.html?id=db7d5388-30b9-11e9-b905-005056c00008");
+
+        JSONObject smtpConfig = new JSONObject();
+        smtpConfig.put("host", "smtp.qq.com");
+        smtpConfig.put("port", 587);
+        smtpConfig.put("account", account);
+        smtpConfig.put("password", password);
+        smtpConfig.put("display_name", "简单提醒");
+
+        mailTemplate.put("templet_data", templetData);
+        mailTemplate.put("smtp_config", smtpConfig);
+
+        HttpClientHelper.postForJson(url, mailTemplate);
+    }
+
 }
 
 

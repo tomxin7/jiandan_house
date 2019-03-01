@@ -1,8 +1,6 @@
 package cn.tomxin.jiandan_house.service.Impl;
 
-import cn.tomxin.jiandan_house.entity.ListParam;
 import cn.tomxin.jiandan_house.entity.QQInfo;
-import cn.tomxin.jiandan_house.entity.Record;
 import cn.tomxin.jiandan_house.entity.User;
 import cn.tomxin.jiandan_house.repository.UserRepository;
 import cn.tomxin.jiandan_house.service.UserService;
@@ -10,10 +8,9 @@ import cn.tomxin.jiandan_house.util.HttpClientHelper;
 import cn.tomxin.jiandan_house.util.JwtToken;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author tomxin
@@ -57,7 +54,7 @@ public class UserServiceImpl implements UserService {
         String userInfo = HttpClientHelper.get(url);
         User user = JSONObject.parseObject(userInfo, User.class);
         user.setOpenId(qqInfo.getOpenId());
-        user.setRegisterTime(new Date());
+        user.setRegisterTime(LocalDateTime.now());
         return user;
     }
 }

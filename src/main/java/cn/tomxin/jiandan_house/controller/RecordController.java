@@ -5,8 +5,10 @@ import cn.tomxin.jiandan_house.entity.Record;
 import cn.tomxin.jiandan_house.service.RecordService;
 import cn.tomxin.jiandan_house.util.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,7 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
+
     /**
      * 添加记录
      * @param
@@ -37,7 +40,10 @@ public class RecordController {
 
         //把中文逗号替换为英文
         record.setKeyWord(record.getKeyWord().replace("，",","));
-        return recordService.save(record);
+
+        record = recordService.saveAndSendMessage(record);
+
+        return record;
     }
 
     /**
@@ -67,4 +73,5 @@ public class RecordController {
 
         return recordService.findAllByOpenId(openId ,listParam);
     }
+
 }

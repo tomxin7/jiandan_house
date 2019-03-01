@@ -11,4 +11,6 @@ public interface RecordService {
     Record save(Record record);
 
     Record update(Record record) throws Exception;
+
+    Record saveAndSendMessage(Record record);
 }

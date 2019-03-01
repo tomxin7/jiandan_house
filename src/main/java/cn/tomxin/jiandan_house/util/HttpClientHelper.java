@@ -1,5 +1,6 @@
 package cn.tomxin.jiandan_house.util;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -8,8 +9,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class HttpClientHelper {
     /**
@@ -48,5 +53,25 @@ public class HttpClientHelper {
             }
         }
         return obj;
+    }
+
+
+    /**
+     * 发送post请求
+     * @param url
+     * @param json
+     * @return
+     */
+    public static String postForJson(String url, JSONObject json){
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        //设置Http Header
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        //设置请求媒体数据类型
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        //设置返回媒体数据类型
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        org.springframework.http.HttpEntity<String> formEntity = new org.springframework.http.HttpEntity<>(json.toString(), headers);
+        return restTemplate.postForObject(url, formEntity, String.class);
     }
 }
