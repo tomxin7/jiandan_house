@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -94,6 +96,11 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return record;
+    }
+
+    @Override
+    public List<Record> findAllByCreateTime(LocalDateTime now) {
+        return recordRepository.findAllByCreateTimeLessThanEqualAndStatus(now,1);
     }
 
     /**
