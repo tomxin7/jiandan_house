@@ -3,15 +3,18 @@ package cn.tomxin.jiandan_house.service;
 import cn.tomxin.jiandan_house.entity.Record;
 import cn.tomxin.jiandan_house.util.HttpClientHelper;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
+@Slf4j
 public class ScheduleCloseUserTask {
 
     @Autowired
@@ -34,14 +37,25 @@ public class ScheduleCloseUserTask {
         List<Record> recordList = recordService.findAllByCreateTime(LocalDateTime.now().plusDays(-20));
         //对关闭的人发送消息
         for (Record record : recordList){
+
             if ("微信".equals(record.getRemindType())){
-                sendWXMessage(record);
+                try{
+                    sendWXMessage(record);
+                    record.setStatus(0);
+                    recordService.update(record);
+                }catch (Exception e){
+                    log.error("微信发送失败");
+                }
             }
             if ("邮箱".equals(record.getRemindType())){
-                sendMailMessage(record);
+                try{
+                    sendMailMessage(record);
+                    record.setStatus(0);
+                    recordService.update(record);
+                }catch (Exception e){
+                    log.error("邮件发送失败");
+                }
             }
-            record.setStatus(0);
-            recordService.update(record);
         }
     }
 
@@ -49,8 +63,9 @@ public class ScheduleCloseUserTask {
      * 发送微信
      * @param record
      */
-    private void sendWXMessage(Record record){
+    private void sendWXMessage(Record record) throws UnsupportedEncodingException {
         String message = "您的任务["+ record.getCityName() + "-" + record.getKeyWord() + "]已经超过20天，系统为节省资源将会停止任务，如果需要继续监控，请重新添加任务，祝您生活愉快";
+        message  = java.net.URLEncoder.encode(message,   "utf-8");
         String url = "http://wxmsg.dingliqc.com/send?msg={msg}&userIds={userid}";
         url = url.replace("{msg}",message);
         url = url.replace("{userid}",record.getRemind());
